@@ -16,11 +16,11 @@ export class MatrizComponent implements OnInit {
   areas: any[] = [];
   errorMessage: string = '';
   successMessage: string = '';
-  areaId: string | null = null; // Adiciona a área do usuário
+  areaId: string | null = null;
 
   constructor(private fb: FormBuilder) {
     const user = localStorage.getItem('user');
-    this.areaId = user ? JSON.parse(user).areaId : null; // Obtém a área do usuário logado
+    this.areaId = user ? JSON.parse(user).areaId : null;
 
     this.matrizForm = this.fb.group({
       risco: ['', Validators.required],
@@ -32,7 +32,14 @@ export class MatrizComponent implements OnInit {
       justificativa_deteccao: ['', Validators.required],
       plano_resposta: [''],
       notas: [''],
-      area_id: [this.areaId, Validators.required], // Inclui a área
+      aceita_risco: [false, Validators.required],
+      area_id: [this.areaId, Validators.required],
+
+      // Novos campos
+      novo_impacto: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
+      justificativa_novo_impacto: ['', Validators.required],
+      nova_probabilidade: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
+      nova_facilidade_deteccao: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
     });
   }
 
@@ -41,14 +48,13 @@ export class MatrizComponent implements OnInit {
     await this.loadRiscos();
   }
 
-  // Carregar áreas para o formulário
   async loadAreas() {
     try {
       const { data, error } = await supabase
         .from('areas')
         .select('*')
-        .eq('id', this.areaId); // Filtra pela área do usuário logado
-  
+        .eq('id', this.areaId);
+
       if (error) {
         this.errorMessage = `Erro ao carregar áreas: ${error.message}`;
       } else {
@@ -59,17 +65,17 @@ export class MatrizComponent implements OnInit {
       this.errorMessage = 'Erro inesperado ao carregar áreas.';
     }
   }
+
   async removerRisco(riscoId: number) {
     if (confirm('Tem certeza que deseja remover este risco?')) {
       try {
-        // Chamada para remover o risco do banco
         const { error } = await supabase.from('matriz_riscos').delete().eq('id', riscoId);
-  
+
         if (error) {
           this.errorMessage = `Erro ao remover risco: ${error.message}`;
         } else {
           this.successMessage = 'Risco removido com sucesso!';
-          this.riscos = this.riscos.filter((risco) => risco.id !== riscoId); // Remove da tabela localmente
+          this.riscos = this.riscos.filter((risco) => risco.id !== riscoId);
         }
       } catch (err) {
         console.error(err);
@@ -78,13 +84,12 @@ export class MatrizComponent implements OnInit {
     }
   }
 
-  // Carregar riscos cadastrados e filtrar pela área do usuário
   async loadRiscos() {
     try {
       const { data, error } = await supabase
         .from('matriz_riscos')
         .select('*, areas(name)')
-        .eq('area_id', this.areaId); // Filtra os riscos pela área do usuário
+        .eq('area_id', this.areaId);
 
       if (error) {
         this.errorMessage = `Erro ao carregar riscos: ${error.message}`;
@@ -102,7 +107,6 @@ export class MatrizComponent implements OnInit {
     }
   }
 
-  // Gerar plano de resposta automático
   gerarPlanoDeResposta(grauRisco: number): string {
     if (grauRisco >= 33) return 'Plano crítico: Redirecionar recursos imediatamente.';
     if (grauRisco >= 25) return 'Ações prioritárias devem ser implementadas em breve.';
@@ -111,7 +115,6 @@ export class MatrizComponent implements OnInit {
     return 'Nenhuma ação necessária.';
   }
 
-  // Cadastrar novo risco
   async submitRisco() {
     if (this.matrizForm.invalid) {
       this.errorMessage = 'Por favor, preencha todos os campos obrigatórios.';
@@ -119,14 +122,19 @@ export class MatrizComponent implements OnInit {
     }
 
     const formValue = this.matrizForm.value;
+
+    // Cálculo do grau de risco atual e do risco residual
     const grauRiscoAtual =
-      (formValue.probabilidade * formValue.impacto) / formValue.facilidade_deteccao;
+      formValue.probabilidade * formValue.impacto * formValue.facilidade_deteccao;
+    const riscoResidual =
+      formValue.nova_probabilidade * formValue.novo_impacto * formValue.nova_facilidade_deteccao;
 
     const planoResposta = formValue.plano_resposta || this.gerarPlanoDeResposta(grauRiscoAtual);
 
     const riscoData = {
       ...formValue,
       grau_risco_atual: Math.round(grauRiscoAtual),
+      risco_residual: Math.round(riscoResidual),
       plano_resposta: planoResposta,
     };
 
@@ -144,7 +152,5 @@ export class MatrizComponent implements OnInit {
       console.error(err);
       this.errorMessage = 'Erro inesperado ao cadastrar risco.';
     }
-    
   }
-  
 }

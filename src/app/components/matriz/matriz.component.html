@@ -142,6 +142,69 @@
       ></textarea>
     </div>
 
+    <div class="mb-3">
+      <label for="novo_impacto" class="form-label">Novo Impacto</label>
+      <input
+        type="number"
+        id="novo_impacto"
+        formControlName="novo_impacto"
+        class="form-control"
+        min="1"
+        max="5"
+        required
+      />
+    </div>
+    
+    <div class="mb-3">
+      <label for="justificativa_novo_impacto" class="form-label">Justificativa do Novo Impacto</label>
+      <textarea
+        id="justificativa_novo_impacto"
+        formControlName="justificativa_novo_impacto"
+        class="form-control"
+        rows="3"
+        placeholder="Justifique o novo impacto"
+      ></textarea>
+    </div>
+    
+    <div class="mb-3">
+      <label for="nova_probabilidade" class="form-label">Nova Probabilidade</label>
+      <input
+        type="number"
+        id="nova_probabilidade"
+        formControlName="nova_probabilidade"
+        class="form-control"
+        min="1"
+        max="5"
+        required
+      />
+    </div>
+    
+    <div class="mb-3">
+      <label for="nova_facilidade_deteccao" class="form-label">Nova Facilidade de Detecção</label>
+      <input
+        type="number"
+        id="nova_facilidade_deteccao"
+        formControlName="nova_facilidade_deteccao"
+        class="form-control"
+        min="1"
+        max="5"
+        required
+      />
+    </div>
+    
+    <div class="mb-3">
+      <label for="aceita_risco" class="form-label">Aceita o Risco?</label>
+      <select
+        id="aceita_risco"
+        formControlName="aceita_risco"
+        class="form-select"
+        required
+      >
+        <option [value]="false">Não</option>
+        <option [value]="true">Sim</option>
+      </select>
+    </div>
+
     <!-- Botão de Submissão -->
     <button type="submit" class="btn btn-primary w-100">Salvar Risco</button>
   </form>
