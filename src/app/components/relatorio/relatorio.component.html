@@ -1,0 +1,34 @@
+<div class="container">
+    <h2>Matriz de Risco</h2>
+    <canvas id="riskMatrixChart"></canvas>
+    <h2>Tabela de Riscos</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Risco</th>
+          <th>Probabilidade</th>
+          <th>Impacto</th>
+          <th>Facilidade de Detecção</th>
+          <th>Grau de Risco Atual</th>
+          <th>Plano de Ação Preventiva</th>
+          <th>Risco Residual</th>
+          <th>Aceita o Risco?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let risco of selectedRiscosData">
+          <td>{{ risco.id }}</td>
+          <td>{{ risco.risco }}</td>
+          <td>{{ risco.probabilidade }}</td>
+          <td>{{ risco.impacto }}</td>
+          <td>{{ risco.facilidade_deteccao }}</td> <!-- Nome corrigido -->
+          <td>{{ risco.grau_risco_atual }}</td>     <!-- Nome corrigido -->
+          <td>{{ risco.plano_acao_preventiva }}</td> <!-- Nome corrigido -->
+          <td>{{ risco.risco_residual }}</td>        <!-- Nome corrigido -->
+          <td>{{ risco.aceitaRisco ? 'Sim' : 'Não' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

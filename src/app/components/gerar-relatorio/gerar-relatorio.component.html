@@ -1,0 +1,43 @@
+<div class="container">
+    <h2 class="mt-4">Gerar Relatório</h2>
+  
+    <!-- Mensagem de Erro -->
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Mensagem de Sucesso -->
+    <div *ngIf="successMessage" class="alert alert-success mt-3">
+      {{ successMessage }}
+    </div>
+  
+    <!-- Formulário de Criação do Relatório -->
+    <form [formGroup]="relatorioForm" (ngSubmit)="criarRelatorio()">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome do Relatório</label>
+        <input
+          type="text"
+          id="nome"
+          formControlName="name"
+          class="form-control"
+          placeholder="Digite o nome do relatório"
+          required
+        />
+      </div>
+  
+      <div class="mb-3">
+        <label class="form-label">Selecione os Riscos</label>
+        <div *ngFor="let risco of riscos">
+          <input
+            type="checkbox"
+            [value]="risco.id"
+            (change)="toggleRisco(risco.id)"
+          />
+          {{ risco.risco }}
+        </div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary w-100">Criar Relatório</button>
+    </form>
+  </div>
+  

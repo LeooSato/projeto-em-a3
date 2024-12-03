@@ -1,0 +1,173 @@
+<div class="container">
+  <h2 class="mt-4">Matriz de Risco</h2>
+
+  <!-- Mensagens de Erro e Sucesso -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success mt-3">
+    {{ successMessage }}
+  </div>
+
+  <!-- Formulário -->
+  <form [formGroup]="matrizForm" (ngSubmit)="submitRisco()">
+    <!-- Risco -->
+    <div class="mb-3">
+      <label for="risco" class="form-label">Risco</label>
+      <input
+        type="text"
+        id="risco"
+        formControlName="risco"
+        class="form-control"
+        placeholder="Descreva o risco"
+        required
+      />
+    </div>
+
+    <!-- Área -->
+    <div class="mb-3">
+      <label for="area_id" class="form-label">Área</label>
+      <select
+        id="area_id"
+        formControlName="area_id"
+        class="form-select"
+        [disabled]="areas.length === 1"
+        required
+      >
+        <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+      </select>
+    </div>
+    
+    
+
+    <!-- Probabilidade -->
+    <div class="mb-3">
+      <label for="probabilidade" class="form-label">Probabilidade</label>
+      <input
+        type="number"
+        id="probabilidade"
+        formControlName="probabilidade"
+        class="form-control"
+        min="1"
+        max="5"
+        required
+      />
+    </div>
+
+    <!-- Justificativa da Probabilidade -->
+    <div class="mb-3">
+      <label for="justificativa_probabilidade" class="form-label">Justificativa da Probabilidade</label>
+      <textarea
+        id="justificativa_probabilidade"
+        formControlName="justificativa_probabilidade"
+        class="form-control"
+        rows="3"
+        placeholder="Justifique a probabilidade"
+      ></textarea>
+    </div>
+
+    <!-- Impacto -->
+    <div class="mb-3">
+      <label for="impacto" class="form-label">Impacto</label>
+      <input
+        type="number"
+        id="impacto"
+        formControlName="impacto"
+        class="form-control"
+        min="1"
+        max="5"
+        required
+      />
+    </div>
+
+    <!-- Justificativa do Impacto -->
+    <div class="mb-3">
+      <label for="justificativa_impacto" class="form-label">Justificativa do Impacto</label>
+      <textarea
+        id="justificativa_impacto"
+        formControlName="justificativa_impacto"
+        class="form-control"
+        rows="3"
+        placeholder="Justifique o impacto"
+      ></textarea>
+    </div>
+
+    <!-- Facilidade de Detecção -->
+    <div class="mb-3">
+      <label for="facilidade_deteccao" class="form-label">Facilidade de Detecção</label>
+      <input
+        type="number"
+        id="facilidade_deteccao"
+        formControlName="facilidade_deteccao"
+        class="form-control"
+        min="1"
+        max="5"
+        required
+      />
+    </div>
+
+    <!-- Justificativa da Facilidade de Detecção -->
+    <div class="mb-3">
+      <label for="justificativa_deteccao" class="form-label">Justificativa da Facilidade de Detecção</label>
+      <textarea
+        id="justificativa_deteccao"
+        formControlName="justificativa_deteccao"
+        class="form-control"
+        rows="3"
+        placeholder="Justifique a facilidade de detecção"
+      ></textarea>
+    </div>
+
+    <!-- Plano de Resposta -->
+    <div class="mb-3">
+      <label for="plano_resposta" class="form-label">Plano de Resposta</label>
+      <textarea
+        id="plano_resposta"
+        formControlName="plano_resposta"
+        class="form-control"
+        rows="3"
+        placeholder="Descreva as ações planejadas para mitigar este risco"
+      ></textarea>
+    </div>
+
+    <!-- Notas -->
+    <div class="mb-3">
+      <label for="notas" class="form-label">Notas</label>
+      <textarea
+        id="notas"
+        formControlName="notas"
+        class="form-control"
+        rows="3"
+        placeholder="Adicione observações ou comentários sobre este risco"
+      ></textarea>
+    </div>
+
+    <!-- Botão de Submissão -->
+    <button type="submit" class="btn btn-primary w-100">Salvar Risco</button>
+  </form>
+
+  <!-- Tabela de Riscos -->
+  <h3 class="mt-4">Riscos Cadastrados</h3>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Risco</th>
+        <th>Área</th>
+        <th>Grau de Risco Atual</th>
+        <th>Plano de Resposta</th>
+        <th>Notas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let risco of riscos">
+        <td>{{ risco.id }}</td>
+        <td>{{ risco.risco }}</td>
+        <td>{{ risco.area_name }}</td>
+        <td>{{ risco.grau_risco_atual }}</td>
+        <td>{{ risco.plano_resposta }}</td>
+        <td>{{ risco.notas }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

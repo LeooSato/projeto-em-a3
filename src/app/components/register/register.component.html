@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <h2>Cadastro de Usuário</h2>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+  <form *ngIf="user?.role === 'admin'" (ngSubmit)="registerUser()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="name" [(ngModel)]="name" name="name" required />
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required />
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Senha</label>
+      <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required />
+    </div>
+    <div class="mb-3">
+      <label for="role" class="form-label">Papel</label>
+      <select class="form-control" id="role" [(ngModel)]="role" name="role" required>
+        <option value="common">Usuário Comum</option>
+        <option value="moderator">Moderador</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+    <div class="mb-3" *ngIf="role !== 'admin'">
+      <label for="areaId" class="form-label">Área</label>
+      <select class="form-control" id="areaId" [(ngModel)]="areaId" name="areaId" required>
+        <option *ngFor="let area of areas" [value]="area.id">{{ area.name }}</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Registrar</button>
+  </form>
+</div>

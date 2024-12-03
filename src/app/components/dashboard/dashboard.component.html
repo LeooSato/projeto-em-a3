@@ -1,0 +1,46 @@
+<div class="dashboard-container">
+    <div class="header">
+      <h1>Bem-vindo, {{ user?.name }}</h1>
+      <p>Papel: {{ user?.role | titlecase }}</p>
+      <button class="btn btn-danger" (click)="logout()">Sair</button>
+    </div>
+  
+    <div class="dashboard-content">
+      <div class="card" routerLink="/gerar-matriz">
+        <div class="card-icon">
+          <i class="fa fa-chart-line"></i>
+        </div>
+        <a href="/gerar-relatorio">
+        <div class="card-title">Gerar Relatório</div>
+        <div class="card-description">
+          Crie matrizes de risco detalhadas para análise.
+        </div>
+      </a>
+      </div>
+  
+      <div class="card" routerLink="/criar-risco">
+        <div class="card-icon">
+          <i class="fa fa-plus-circle"></i>
+        </div>
+        <a href="/matriz">
+        <div class="card-title">Cadastrar Risco</div>
+        <div class="card-description">
+          Adicione novos riscos ao banco de dados.
+        </div>
+      </a>
+      </div>
+  
+      <div class="card" routerLink="/visualizar-relatorios">
+        <div class="card-icon">
+          <i class="fa fa-folder-open"></i>
+        </div>
+        <a href="/visualizar">
+        <div class="card-title">Visualizar Relatórios</div>
+        <div class="card-description">
+          Acesse e gerencie relatórios gerados.
+        </div>
+      </a>
+      </div>
+    </div>
+  </div>
+  
