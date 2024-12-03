@@ -20,6 +20,7 @@ export class VisualizarRelatoriosComponent implements OnInit {
   async ngOnInit() {
     this.carregarUsuario();
     if (this.user) {
+      console.log('Usuário logado:', this.user); // Log para verificar o usuário e área
       await this.carregarRelatorios();
     }
   }
@@ -28,6 +29,14 @@ export class VisualizarRelatoriosComponent implements OnInit {
     const user = localStorage.getItem('user');
     if (user) {
       this.user = JSON.parse(user);
+
+      // Log para verificar se o `area_id` está definido
+      console.log('Dados do usuário:', this.user);
+
+      // Verificação adicional para moderadores sem `area_id`
+      if (!this.user.area_id && this.user.role === 'moderator') {
+        this.errorMessage = 'Moderador não possui uma área vinculada.';
+      }
     } else {
       this.errorMessage = 'Usuário não autenticado. Faça login novamente.';
     }
@@ -45,6 +54,10 @@ export class VisualizarRelatoriosComponent implements OnInit {
       if (this.user.role === 'common') {
         query = query.eq('user_id', this.user.id);
       } else if (this.user.role === 'moderator') {
+        if (!this.user.area_id) {
+          this.errorMessage = 'Moderador não possui uma área vinculada.';
+          return;
+        }
         query = query.eq('area_id', this.user.area_id);
       }
 
