@@ -17,10 +17,15 @@ export class MatrizComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
   areaId: string | null = null;
+  isAdmin: boolean = false;
 
   constructor(private fb: FormBuilder) {
     const user = localStorage.getItem('user');
-    this.areaId = user ? JSON.parse(user).areaId : null;
+    if (user) {
+      const userData = JSON.parse(user);
+      this.areaId = userData.areaId;
+      this.isAdmin = userData.role === 'admin';
+    }
 
     this.matrizForm = this.fb.group({
       risco: ['', Validators.required],
@@ -50,10 +55,12 @@ export class MatrizComponent implements OnInit {
 
   async loadAreas() {
     try {
-      const { data, error } = await supabase
-        .from('areas')
-        .select('*')
-        .eq('id', this.areaId);
+      let query = supabase.from('areas').select('*');
+      if (!this.isAdmin && this.areaId) {
+        query = query.eq('id', this.areaId);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         this.errorMessage = `Erro ao carregar áreas: ${error.message}`;
@@ -86,10 +93,15 @@ export class MatrizComponent implements OnInit {
 
   async loadRiscos() {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('matriz_riscos')
-        .select('*, areas(name)')
-        .eq('area_id', this.areaId);
+        .select('*, areas(name)');
+
+      if (!this.isAdmin && this.areaId) {
+        query = query.eq('area_id', this.areaId);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         this.errorMessage = `Erro ao carregar riscos: ${error.message}`;

@@ -10,7 +10,8 @@ import { supabase } from '../../../environment/supabase.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   imports: [CommonModule, FormsModule],
-})export class RegisterComponent implements OnInit {
+})
+export class RegisterComponent implements OnInit {
   // Propriedades relacionadas ao cadastro de usuários
   email: string = '';
   password: string = '';
@@ -21,23 +22,28 @@ import { supabase } from '../../../environment/supabase.service';
   successMessage: string = '';
   errorMessage: string = '';
 
+  // Propriedades relacionadas ao cadastro de áreas
+  areaName: string = '';
+  areaDescription: string = '';
+  areaSuccessMessage: string = '';
+  areaErrorMessage: string = '';
+
   // Usuário logado
-  user: any = null; // Adicione esta propriedade
+  user: any = null;
 
   constructor(private router: Router) {}
 
   async ngOnInit() {
-    this.loadUser(); // Inicializa os dados do usuário logado
-    await this.loadAreas(); // Carrega as áreas disponíveis
+    this.loadUser();
+    await this.loadAreas();
   }
 
-  // Carrega os dados do usuário logado
   loadUser() {
     const userData = localStorage.getItem('user');
     if (userData) {
       this.user = JSON.parse(userData);
     } else {
-      this.router.navigate(['/login']); // Redireciona para login se não logado
+      this.router.navigate(['/login']);
     }
   }
 
@@ -94,6 +100,36 @@ import { supabase } from '../../../environment/supabase.service';
     this.name = '';
     this.role = 'common';
     this.areaId = '';
+  }
+
+  async registerArea() {
+    try {
+      if (!this.areaName.trim()) {
+        this.areaErrorMessage = 'O nome da área é obrigatório.';
+        return;
+      }
+
+      const { error } = await supabase.from('areas').insert([
+        {
+          name: this.areaName,
+          description: this.areaDescription,
+        },
+      ]);
+
+      if (error) {
+        this.areaErrorMessage = `Erro ao registrar área: ${error.message}`;
+        return;
+      }
+
+      this.areaSuccessMessage = 'Área registrada com sucesso!';
+      this.areaErrorMessage = '';
+      this.areaName = '';
+      this.areaDescription = '';
+      await this.loadAreas();
+    } catch (err) {
+      this.areaErrorMessage = 'Erro inesperado ao tentar registrar a área.';
+      console.error(err);
+    }
   }
 
   async hashPassword(password: string): Promise<string> {
