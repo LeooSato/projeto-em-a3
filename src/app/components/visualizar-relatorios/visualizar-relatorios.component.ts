@@ -34,7 +34,7 @@ export class VisualizarRelatoriosComponent implements OnInit {
       console.log('Dados do usuário:', this.user);
 
       // Verificação adicional para moderadores sem `area_id`
-      if (!this.user.area_id && this.user.role === 'moderator') {
+      if (!this.user.areaId && this.user.role === 'moderator') {
         this.errorMessage = 'Moderador não possui uma área vinculada.';
       }
     } else {
