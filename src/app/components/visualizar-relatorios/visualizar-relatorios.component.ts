@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { supabase } from '../../../environment/supabase.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // Importar RouterModule
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-visualizar-relatorios',
   templateUrl: './visualizar-relatorios.component.html',
   styleUrls: ['./visualizar-relatorios.component.css'],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule], // Adicione o RouterModule aqui
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
 })
 export class VisualizarRelatoriosComponent implements OnInit {
   relatorios: any[] = [];
@@ -30,10 +30,9 @@ export class VisualizarRelatoriosComponent implements OnInit {
     if (user) {
       this.user = JSON.parse(user);
 
-      // Log para verificar se o `area_id` está definido
+      // Corrigido: Verificar `areaId` ao invés de `area_id`
       console.log('Dados do usuário:', this.user);
 
-      // Verificação adicional para moderadores sem `area_id`
       if (!this.user.areaId && this.user.role === 'moderator') {
         this.errorMessage = 'Moderador não possui uma área vinculada.';
       }
@@ -54,11 +53,12 @@ export class VisualizarRelatoriosComponent implements OnInit {
       if (this.user.role === 'common') {
         query = query.eq('user_id', this.user.id);
       } else if (this.user.role === 'moderator') {
-        if (!this.user.area_id) {
+        // Corrigido: Usar `areaId` corretamente
+        if (!this.user.areaId) {
           this.errorMessage = 'Moderador não possui uma área vinculada.';
           return;
         }
-        query = query.eq('area_id', this.user.areaId);
+        query = query.eq('area_id', this.user.areaId); // Ajuste para usar `areaId`
       }
 
       const { data, error } = await query;
