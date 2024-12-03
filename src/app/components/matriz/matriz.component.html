@@ -147,27 +147,38 @@
   </form>
 
   <!-- Tabela de Riscos -->
-  <h3 class="mt-4">Riscos Cadastrados</h3>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Risco</th>
-        <th>Área</th>
-        <th>Grau de Risco Atual</th>
-        <th>Plano de Resposta</th>
-        <th>Notas</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let risco of riscos">
-        <td>{{ risco.id }}</td>
-        <td>{{ risco.risco }}</td>
-        <td>{{ risco.area_name }}</td>
-        <td>{{ risco.grau_risco_atual }}</td>
-        <td>{{ risco.plano_resposta }}</td>
-        <td>{{ risco.notas }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<!-- Tabela de Riscos -->
+<h3 class="mt-4">Riscos Cadastrados</h3>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Risco</th>
+      <th>Área</th>
+      <th>Grau de Risco Atual</th>
+      <th>Plano de Resposta</th>
+      <th>Notas</th>
+      <th>Ações</th> <!-- Coluna para ações -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let risco of riscos">
+      <td>{{ risco.id }}</td>
+      <td>{{ risco.risco }}</td>
+      <td>{{ risco.area_name }}</td>
+      <td>{{ risco.grau_risco_atual }}</td>
+      <td>{{ risco.plano_resposta }}</td>
+      <td>{{ risco.notas }}</td>
+      <td>
+        <!-- Botão de Remover -->
+        <button
+          class="btn btn-danger btn-sm"
+          (click)="removerRisco(risco.id)"
+        >
+          Remover
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+

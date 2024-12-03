@@ -59,7 +59,24 @@ export class MatrizComponent implements OnInit {
       this.errorMessage = 'Erro inesperado ao carregar áreas.';
     }
   }
+  async removerRisco(riscoId: number) {
+    if (confirm('Tem certeza que deseja remover este risco?')) {
+      try {
+        // Chamada para remover o risco do banco
+        const { error } = await supabase.from('matriz_riscos').delete().eq('id', riscoId);
   
+        if (error) {
+          this.errorMessage = `Erro ao remover risco: ${error.message}`;
+        } else {
+          this.successMessage = 'Risco removido com sucesso!';
+          this.riscos = this.riscos.filter((risco) => risco.id !== riscoId); // Remove da tabela localmente
+        }
+      } catch (err) {
+        console.error(err);
+        this.errorMessage = 'Erro inesperado ao remover risco.';
+      }
+    }
+  }
 
   // Carregar riscos cadastrados e filtrar pela área do usuário
   async loadRiscos() {
