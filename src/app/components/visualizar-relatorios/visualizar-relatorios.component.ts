@@ -58,7 +58,7 @@ export class VisualizarRelatoriosComponent implements OnInit {
           this.errorMessage = 'Moderador não possui uma área vinculada.';
           return;
         }
-        query = query.eq('area_id', this.user.area_id);
+        query = query.eq('area_id', this.user.areaId);
       }
 
       const { data, error } = await query;
