@@ -26,7 +26,8 @@ const routes: Routes = [{
   path:'relatorio',component:RelatorioComponent
 },
 {path:'visualizar',component:VisualizarRelatoriosComponent},
-{ path: '', redirectTo: '/dashboard', pathMatch: 'full' }]
+{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+{ path: 'relatorio/:id', component: RelatorioComponent },]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

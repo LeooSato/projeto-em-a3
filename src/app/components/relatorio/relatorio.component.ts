@@ -4,6 +4,8 @@ import { RiskSelectionService } from '../../service/risk-selection.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { supabase } from '../../../environment/supabase.service';
+import { ActivatedRoute } from '@angular/router';
 
 Chart.register(annotationPlugin);
 Chart.register(...registerables);
@@ -14,57 +16,73 @@ Chart.register(...registerables);
   styleUrls: ['./relatorio.component.css'],imports: [CommonModule, ReactiveFormsModule]
 })
 export class RelatorioComponent implements OnInit {
-  selectedRiscosData: any[] = [];
+  relatorioId: string | null = null; // ID do relatório atual
+  selectedRiscosData: any[] = []; // Dados dos riscos associados
+  errorMessage: string = ''; // Mensagem de erro
 
-  constructor(private riskSelectionService: RiskSelectionService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private riskSelectionService: RiskSelectionService
+  ) {}
 
-  ngOnInit() {
-    // Passo 1: Recuperar dados do serviço
-    this.selectedRiscosData = this.riskSelectionService.getSelectedRiscos();
-    console.log('Passo 1: Riscos recuperados do serviço:', this.selectedRiscosData);
+  async ngOnInit() {
+    // Passo 1: Recuperar o ID do relatório da rota
+    this.relatorioId = this.route.snapshot.paramMap.get('id');
 
-    // Verificar se os dados estão vazios
-    if (this.selectedRiscosData.length === 0) {
-      console.error('Nenhum risco selecionado foi encontrado. Verifique o serviço ou a origem dos dados.');
-      return;
+    if (this.relatorioId) {
+      // Carregar os riscos associados ao relatório específico
+      await this.carregarRiscos();
+    } else {
+      // Caso os riscos estejam no serviço, use-os diretamente
+      this.selectedRiscosData = this.riskSelectionService.getSelectedRiscos();
+      if (this.selectedRiscosData.length === 0) {
+        this.errorMessage = 'Nenhum risco selecionado ou relatório encontrado.';
+        return;
+      }
     }
 
-    // Passo 2: Verificar estrutura dos dados
-    this.selectedRiscosData.forEach((risco, index) => {
-      console.log(`Passo 2: Verificando estrutura do risco ${index + 1}`, risco);
-      if (
-        typeof risco.probabilidade !== 'number' ||
-        typeof risco.impacto !== 'number' ||
-        typeof risco.grau_risco_atual !== 'number' ||
-        typeof risco.risco_residual !== 'number'
-      ) {
-        console.error(`O risco ${risco.id} possui valores inválidos ou ausentes.`);
-      }
-    });
-
-    // Passo 3: Gerar Matriz de Risco
+    // Gerar Matriz de Risco
     if (this.selectedRiscosData.length > 0) {
-      try {
-        this.generateRiskMatrix();
-        console.log('Passo 3: Matriz de Risco gerada com sucesso.');
-      } catch (error) {
-        console.error('Erro ao gerar Matriz de Risco:', error);
-      }
+      this.generateRiskMatrix();
     }
   }
 
+  // Carrega os riscos associados a um relatório específico
+  async carregarRiscos() {
+    try {
+      const { data, error } = await supabase
+        .from('relatorio_riscos')
+        .select(`
+          riscos:matriz_riscos(*)
+        `)
+        .eq('relatorio_id', this.relatorioId);
+
+      if (error) {
+        this.errorMessage = `Erro ao carregar riscos: ${error.message}`;
+        return;
+      }
+
+      // Mapear os dados para exibição
+      this.selectedRiscosData = (data || []).map((item) => item.riscos);
+    } catch (err) {
+      console.error('Erro ao carregar riscos:', err);
+      this.errorMessage = 'Erro inesperado ao carregar riscos.';
+    }
+  }
+
+  // Gera a Matriz de Risco
   generateRiskMatrix() {
     const ctx = document.getElementById('riskMatrixChart') as HTMLCanvasElement;
-  
+
     if (!ctx) {
       console.error('Canvas para Matriz de Risco não encontrado.');
       return;
     }
-  
+
     const data = this.selectedRiscosData.map((risco) => ({
       x: risco.impacto,
       y: risco.probabilidade,
-      r: 10, // Tamanho do ponto
+      r: 10, // Tamanho da bolha
     }));
   
     new Chart(ctx, {

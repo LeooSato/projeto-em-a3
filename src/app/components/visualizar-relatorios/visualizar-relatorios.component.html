@@ -1,45 +1,44 @@
 <div class="container">
-    <h2>Relatórios Gerados</h2>
-  
-    <!-- Mensagem de erro -->
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-  
-    <!-- Tabela de relatórios -->
-    <table class="table table-bordered" *ngIf="relatorios.length > 0">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome do Relatório</th>
-          <th>Criado por</th>
-          <th>Área</th>
-          <th>Data de Criação</th>
-          <th>Ação</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let relatorio of relatorios">
-          <td>{{ relatorio.id }}</td>
-          <td>{{ relatorio.name }}</td>
-          <td>{{ relatorio.users.name }}</td>
-          <td>{{ relatorio.areas.name }}</td>
-          <td>{{ relatorio.created_at | date:'short' }}</td>
-          <td>
-            <button
-              class="btn btn-primary"
-              (click)="visualizarRelatorio(relatorio.id)"
-            >
-              Visualizar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <!-- Mensagem caso não existam relatórios -->
-    <div *ngIf="relatorios.length === 0 && !errorMessage">
-      <p>Nenhum relatório encontrado.</p>
-    </div>
+  <h2>Relatórios Gerados</h2>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
   </div>
-  
+
+  <!-- Tabela de relatórios -->
+  <table class="table table-bordered" *ngIf="relatorios.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome do Relatório</th>
+        <th>Criado por</th>
+        <th>Área</th>
+        <th>Data de Criação</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let relatorio of relatorios">
+        <td>{{ relatorio.id }}</td>
+        <td>{{ relatorio.name }}</td>
+        <td>{{ relatorio.users.name }}</td>
+        <td>{{ relatorio.areas.name }}</td>
+        <td>{{ relatorio.created_at | date : "short" }}</td>
+        <td>
+          <button
+            class="btn btn-primary"
+            [routerLink]="['/relatorio', relatorio.id]"
+          >
+            Visualizar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mensagem caso não existam relatórios -->
+  <div *ngIf="relatorios.length === 0 && !errorMessage">
+    <p>Nenhum relatório encontrado.</p>
+  </div>
+</div>

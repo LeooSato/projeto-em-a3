@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { supabase } from '../../../environment/supabase.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router'; // Importar RouterModule
 
 @Component({
   selector: 'app-visualizar-relatorios',
   templateUrl: './visualizar-relatorios.component.html',
   styleUrls: ['./visualizar-relatorios.component.css'],
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule], // Adicione o RouterModule aqui
 })
 export class VisualizarRelatoriosComponent implements OnInit {
   relatorios: any[] = [];
@@ -58,11 +59,5 @@ export class VisualizarRelatoriosComponent implements OnInit {
       console.error('Erro ao carregar relatórios:', err);
       this.errorMessage = 'Erro inesperado ao carregar relatórios.';
     }
-  }
-
-  visualizarRelatorio(id: string) {
-    // Redirecionar ou exibir os detalhes do relatório (implementação personalizada)
-    console.log(`Visualizar relatório ID: ${id}`);
-    // Aqui pode ser um redirecionamento para outra página ou um modal
   }
 }
