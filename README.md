@@ -1,4 +1,26 @@
 # ProjetoEmA3
+#ESTE PROJETO FOI DESENVOLVIDO PARA UMA ATIVIDADE AVALIATIVA DA A3 DE ESTRUTURAS MATEMATICAS
+#FOI FEITO UM DESENVOLVIMENTO EM JAVASCRIPT
+# Funcionalidades Principais
+Cadastro de Riscos (Matriz de Risco)
+Formulário para cadastro de riscos, incluindo atributos como:
+Probabilidade, impacto, facilidade de detecção e suas justificativas.
+Novo impacto, nova probabilidade e nova facilidade de detecção para cálculo do risco residual.
+Aceitação do risco (true/false) com justificativa.
+Cálculo automático de grau de risco atual e risco residual com base nos valores informados.
+Gerenciamento de Relatórios
+Moderadores e administradores podem visualizar relatórios vinculados às suas áreas:
+Usuários comuns: Relatórios criados por eles mesmos.
+Moderadores: Relatórios de sua área específica.
+Administradores: Todos os relatórios do sistema.
+Os relatórios são apresentados em uma tabela, com botões para visualizar detalhes.
+Cadastro de Usuários e Áreas
+Administrações podem cadastrar usuários e associá-los a áreas específicas:
+Moderadores e usuários comuns são vinculados obrigatoriamente a uma área.
+Administradores têm acesso a todos os relatórios e áreas.
+Registro de áreas para organizar e categorizar riscos e relatórios.
+
+
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.2.
 
